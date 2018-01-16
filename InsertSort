@@ -1,0 +1,67 @@
+       /// <summary>
+        /// 直接插入排序2
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        private int[] InsertSort2(int[] arr)
+        {
+            var len = arr.Length;
+            int temp;
+            for (int i = 1; i < len; i++)
+            {
+                if (arr[i] < arr[i - 1])    //有要交换的
+                {
+                    temp = arr[i];      //先存储到临时
+                    int j;
+                    for (j = i - 1; j >= 0 && arr[j] > temp; j--)
+                    {
+                        arr[j + 1] = arr[j];    //把比temp大的全部后移
+                    }
+                    arr[j + 1] = temp;
+                }
+                Console.WriteLine("-----第 " + i + " 趟排序----->");
+                foreach (var b in arr)
+                {
+                    Console.Write(b + " ");
+                }
+                Console.WriteLine();
+            }
+            return arr;
+        }
+        /// <summary>
+        /// 希尔排序
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        private int[] ShellSort2(int[] arr)
+        {
+            int len = arr.Length;
+            int dk = len / 2;
+            int ii = 1;
+            while (dk > 0)
+            {
+                int temp;   //交换值用
+                //
+                for (int i = dk; i < len; i++)
+                {
+                    for (int k = i ; k-dk>=0; k-=dk)
+                    {
+                        if (arr[k] < arr[k - dk])
+                        {
+                            temp = arr[k];
+                            arr[k] = arr[k - dk];
+                            arr[k - dk] = temp;
+                        }
+                    }
+                }
+                dk = dk / 2;
+                Console.WriteLine("-----第 " + ii + " 趟排序----->");
+                foreach (var b in arr)
+                {
+                    Console.Write(b + " ");
+                }
+                Console.WriteLine();
+                ii++;
+            }
+            return arr;
+        }
