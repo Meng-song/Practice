@@ -1,0 +1,28 @@
+//回文数算法1:
+int len = a.Trim().Length - 1;
+int x, y;
+for (x = 0, y = len - x; x <= (len + 1) / 2; ++x, --y)
+{
+if (a[x] != a[y])
+{
+    Console.WriteLine("不是回文");
+    break;
+}
+
+}
+if (x >= y)
+{
+Console.WriteLine("是回文");
+}
+//回文算法思想2：
+long long sum=0,temp=num;  
+将整数num逆转  
+while(num)  
+{  
+sum=sum*10+num%10;  
+num/=10;  
+}  
+if(temp==sum)  
+return 1;  
+else  
+return 0;  
