@@ -1,0 +1,64 @@
+   class ClassTraverse
+    {
+        public static void Main()
+        {
+            string filePath = String.Format(@"D:\Documents\XXX");//取文件夹路径
+            string[] filePaths = Directory.GetFiles(filePath);
+            StringBuilder sbName = new StringBuilder();
+            StringBuilder sbContent = new StringBuilder();
+            StringBuilder sbOn = new StringBuilder();
+            StringBuilder sbOff = new StringBuilder();
+            StringBuilder sbInsert = new StringBuilder();
+            ClassTraverse c2 = new ClassTraverse();
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+
+                string[] names = filePaths[i].Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                string fileName = names[names.Length - 1].Replace(".sql", "");
+                sbName.AppendLine(fileName);
+                //Off
+                sbOff.AppendLine(string.Format("set identity_insert [{0}] off ", fileName));
+                sbOff.AppendLine("GO");
+                //On
+                sbOn.AppendLine("set identity_insert [" + fileName + "] on ");
+                sbOn.AppendLine("GO");
+                //脚本内容
+                string fileStr = File.ReadAllText(filePaths[i]);
+                //Insert 语句
+                sbInsert.AppendLine(string.Format(@"insert into [{0}]({1}) select {1} from XXXX db.dbo.[{0}]", fileName, c2.GetString(fileStr)));
+                sbInsert.AppendLine("GO");
+                sbContent.AppendLine(fileStr);
+                sbContent.AppendLine("");
+            }
+            File.WriteAllText("name.txt", sbName.ToString());
+            File.WriteAllText("content.txt", sbContent.ToString());
+            File.WriteAllText("setON.txt", sbOn.ToString());
+            File.WriteAllText("setOff.txt", sbOff.ToString());
+            File.WriteAllText("Insert.txt", sbInsert.ToString());
+            Console.ReadKey();
+        }
+
+        private string GetString(string content)
+        {
+            StringBuilder sbCon = new StringBuilder();
+            int index1 = content.IndexOf('(');
+            int index2 = content.IndexOf("CONSTRAINT", index1);
+            string sb = content.Substring(index1, index2 - index1 - 1);
+            string[] cols = sb.Split('[');
+            bool flag = true;
+            for (int i = 0; i < cols.Length; i++)
+            {
+                if (!flag)
+                {
+                    string columName = "[" + cols[i] + ",";
+                    sbCon.Append(columName);
+                }
+                flag = !flag;
+            }
+            if (sbCon.ToString().EndsWith(","))
+            {
+                sbCon.Remove(sbCon.Length - 1, 1);
+            }
+            return sbCon.ToString();
+        }
+    }
